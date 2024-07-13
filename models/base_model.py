@@ -44,7 +44,10 @@ class BaseModel:
                 self.id = str(uuid.uuid4())
         else:
             self.id = str(uuid.uuid4())
-            self.created_at = datetime.utcnow()
+            if kwargs.get("created_at", None) is None:
+                self.created_at = datetime.utcnow()
+            else:
+                datetime.strptime(kwargs["created_at"], time)
             self.updated_at = self.created_at
 
     def __str__(self):

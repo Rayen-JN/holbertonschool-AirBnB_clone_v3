@@ -1,7 +1,6 @@
 #!/usr/bin/python3
-"""
-Contains the FileStorage class
-"""
+"""This is the docstring for the models.engine.file_storage module."""
+
 
 import json
 from models.amenity import Amenity
@@ -55,7 +54,7 @@ class FileStorage:
                 jo = json.load(f)
             for key in jo:
                 self.__objects[key] = classes[jo[key]["__class__"]](**jo[key])
-        except:
+        except BaseException:
             pass
 
     def delete(self, obj=None):
@@ -68,3 +67,17 @@ class FileStorage:
     def close(self):
         """call reload() method for deserializing the JSON file to objects"""
         self.reload()
+
+    def get(self, cls, id):
+        """retreive one object"""
+        big_dict = self.all(cls)
+        for obj in big_dict.values():
+            if id == str(obj.id):
+                return obj
+        return None
+
+    def count(self, cls=None):
+        """Returns the number of objects in storage matching the given class"""
+        if cls is None:
+            return len(self.all())
+        return len(self.all(cls))

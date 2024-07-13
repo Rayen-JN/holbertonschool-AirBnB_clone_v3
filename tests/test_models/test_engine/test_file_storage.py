@@ -67,6 +67,45 @@ test_file_storage.py'])
             self.assertTrue(len(func[1].__doc__) >= 1,
                             "{:s} method needs a docstring".format(func[0]))
 
+    def test_get_existing_object():
+        """Test get method with an existing object"""
+        storage = FileStorage()
+        user = User()
+        user_id = user.id
+        storage.new(user)
+        result = storage.get(User, user_id)
+        assert result == user
+
+    def test_get_nonexistent_object():
+        """Test get method with a nonexistent object"""
+        storage = FileStorage()
+        result = storage.get(User, "nonexistent_id")
+        assert result is None
+
+    def test_count_all_objects():
+        """Test count method with all objects in storage"""
+        storage = FileStorage()
+        user1 = User()
+        user2 = User()
+        storage.new(user1)
+        storage.new(user2)
+        result = storage.count()
+        assert result == 2
+
+    def test_count_specific_class():
+        """Test count method with a specific class"""
+        storage = FileStorage()
+        user = User()
+        storage.new(user)
+        result = storage.count(User)
+        assert result == 1
+
+    def test_count_nonexistent_class():
+        """Test count method with a nonexistent class"""
+        storage = FileStorage()
+        result = storage.count("NonexistentClass")
+        assert result == 0
+
 
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
